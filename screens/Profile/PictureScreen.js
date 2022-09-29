@@ -64,7 +64,7 @@ const PictureScreen = ({
           setCurrentImage(profileStorageImage)
         }
 
-        setLoading(false)
+        setTimeout(() => setLoading(false), 1000)
       })()
     }
 
@@ -135,7 +135,7 @@ const PictureScreen = ({
       console.log('updated redux')
 
       setImageSaved(true)
-      setLoading(false)
+      setTimeout(() => setLoading(false), 1000)
 
       onSetNotification({
         message: pageStatics.messages.notifications.profilePictureUpdateSuccess,
@@ -153,32 +153,38 @@ const PictureScreen = ({
 
   const buttonDisabled = imageSaved || loading
 
-  if (loading) {
-    return <ActivityIndicator />
-  }
+  // if (loading) {
+  //   return <ActivityIndicator />
+  // }
 
   return (
     <View>
-      <InfoBox infoList={[pageStatics.messages.info.picture.first]} />
-      <RNButton
-        onPress={openImagePickerAsync}
-        title={currentImage ? 'Change Image' : 'Pick Image'}
-      />
-      {selectedImage && (
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
         <View>
-          <Image source={{ uri: selectedImage }} style={{ width: 300, height: 300, resizeMode: 'contain' }} />
+          <InfoBox infoList={[pageStatics.messages.info.picture.first]} />
+          <RNButton
+            onPress={openImagePickerAsync}
+            title={currentImage ? 'Change Image' : 'Pick Image'}
+          />
+          {selectedImage && (
+            <View>
+              <Image source={{ uri: selectedImage }} style={{ width: 300, height: 300, resizeMode: 'contain' }} />
+            </View>
+          )}
+          {(!selectedImage && currentImage) && (
+            <View>
+              <Image source={{ uri: currentImage }} style={{ width: 300, height: 300, resizeMode: 'contain' }} />
+            </View>
+          )}
+          <RNButton
+            disabled={buttonDisabled}
+            onPress={updatePictureHandler}
+            title={pageStatics.buttons.updatePicture}
+          /> 
         </View>
       )}
-      {(!selectedImage && currentImage) && (
-        <View>
-          <Image source={{ uri: currentImage }} style={{ width: 300, height: 300, resizeMode: 'contain' }} />
-        </View>
-      )}
-      <RNButton
-        disabled={buttonDisabled}
-        onPress={updatePictureHandler}
-        title={pageStatics.buttons.updatePicture}
-      /> 
     </View>
   )
 }

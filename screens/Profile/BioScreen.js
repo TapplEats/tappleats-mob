@@ -55,8 +55,8 @@ const BioScreen = ({
         setBioForm(prevForm => ({ ...prevForm, ...adjustedBioForm.adjustedForm }))
         setFormValid(adjustedBioForm.formValid)
         // setLoadingDone(true)
-        // setTimeout(() => setLoading(false), 1000)
-        setLoading(false)
+        setTimeout(() => setLoading(false), 1000)
+        // setLoading(false)
       })()
     }
 
@@ -92,8 +92,8 @@ const BioScreen = ({
 
       setFormSaved(true)
       setFormTouched(false)
-      // setTimeout(() => setLoading(false), 1000)
-      setLoading(false)
+      setTimeout(() => setLoading(false), 1000)
+      // setLoading(false)
 
       onSetNotification({
         message: pageStatics.messages.notifications.profileBioUpdateSuccess,
@@ -149,22 +149,28 @@ const BioScreen = ({
 
   const buttonDisabled = formSaved || (formTouched && !formValid) || !formTouched || loading
 
-  if (loading) {
-    return <ActivityIndicator />
-  }
+  // if (loading) {
+  //   return <ActivityIndicator />
+  // }
 
   return (
     <View>
-      <Text>Bio Screen</Text>
-      <View>
-        <Text>{profileData && profileData.bioVideo ? pageStatics.data.titles.currentVideo : pageStatics.data.titles.addVideo}</Text>
-        {loadTabFormContent(bioForm)}
-      </View>
-      <RNButton
-        disabled={buttonDisabled}
-        onPress={() => updateBioHandler()}
-        title={pageStatics.buttons.updateBio}
-      />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <View>
+          <Text>Bio Screen</Text>
+          <View>
+            <Text>{profileData && profileData.bioVideo ? pageStatics.data.titles.currentVideo : pageStatics.data.titles.addVideo}</Text>
+            {loadTabFormContent(bioForm)}
+          </View>
+          <RNButton
+            disabled={buttonDisabled}
+            onPress={() => updateBioHandler()}
+            title={pageStatics.buttons.updateBio}
+          />
+        </View>
+      )}
     </View>
   )
 }

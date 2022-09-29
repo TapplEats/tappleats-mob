@@ -275,6 +275,7 @@ export const en = {
       forms: {
         accountSecret: 'Profile secret code',
         loginEmail: 'Your login email',
+        loginPassword: 'Your login password',
       },
     },
 

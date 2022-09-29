@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { View, Text, StyleSheet, Button as RNButton } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Button as RNButton } from 'react-native'
 import { TextInput } from 'react-native-paper'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Video } from 'expo-av'
 
 import PropTypes from 'prop-types'
-
-// import DateFnsAdapter from '@date-io/date-fns'
-// import { isValid } from 'date-fns'
 
 const FormElement = ({
   valid,
@@ -27,10 +25,18 @@ const FormElement = ({
   let inputEl = null
   const video = useRef(null)
   const [videoStatus, setVideoStatus] = useState({})
+  const [passwordVisibility, setPasswordVisibility] = useState(true)
+  const [rightIcon, setRightIcon] = useState('eye')
 
-  // let chipsArray = []
-  // const dateFns = new DateFnsAdapter()
-  // let dateValue = null
+  const handlePasswordVisibility = () => {
+    if (rightIcon === 'eye') {
+      setRightIcon('eye-off');
+      setPasswordVisibility(!passwordVisibility)
+    } else if (rightIcon === 'eye-off') {
+      setRightIcon('eye');
+      setPasswordVisibility(!passwordVisibility)
+    }
+  }
 
   switch (elementType) {
     case ('textarea'):
@@ -84,42 +90,38 @@ const FormElement = ({
         </View>
       )
       break
-    // case ('imageUpload'):
-    //   inputEl = (
-    //     <View style={styles.container}>
-    //       <View style={styles.imageControls}>
-    //         {elementSetup.showLabel && (
-    //           <Text>Profile image</Text>
-    //         )}
-    //         <RNButton
-    //           style={styles.button}
-    //           onPress={openImagePickerAsync}
-    //           title={imageUploadValue ? elementSetup.changeButtonText : elementSetup.selectButtonText}
-    //           // title={}
-    //         />
-    //       </View>
-    //       {selectedImage && (
-    //         <View style={styles.imageContainer}>
-    //           <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
-    //         </View>
-    //       )}
-    //     </View>
-    //   )
-    //   break
     default:
       inputEl = (
         <View>
+          {elementOptions && elementOptions.leftIcon ? (
+            <MaterialCommunityIcons
+              name={elementOptions.leftIcon}
+              size={20}
+              color={elementOptions.iconColor}  
+              style={styles.leftIcon}
+            />
+          ) : null}
           <TextInput
             label={label}
             value={elementSetup.type === 'number' ? Number(value) : value}
-            // onChange={changed}
             onChangeText={changed}
             onBlur={blured}
             error={touched && !valid}
             disabled={disabled}
-            // placeholder={elementSetup.placeholder}
+            secureTextEntry={elementSetup.type === 'password' ? passwordVisibility : false}
             {...elementSetup}
+            
           />
+          {elementOptions && elementOptions.rightIcon ? (
+            <TouchableOpacity onPress={handlePasswordVisibility}>
+              <MaterialCommunityIcons
+                name={rightIcon}
+                size={20}
+                color={elementSetup.iconColor}
+                style={styles.rightIcon}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       )
   }
@@ -232,6 +234,13 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  leftIcon: {
+    marginRight: 10
+  },
+  rightIcon: {
+    alignSelf: 'center',
+    marginLeft: 10
+  }
 })
 
 export default FormElement

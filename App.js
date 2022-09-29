@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react'
 import { Provider as PaperProvider } from 'react-native-paper'
 // import { StyleSheet, Text, View, Button } from "react-native"
 
-import ReduxThunk from 'redux-thunk'
+// import ReduxThunk from 'redux-thunk'
 import { Provider } from 'react-redux'
-import {
-  createStore, applyMiddleware, combineReducers,
-} from 'redux'
+// import {
+//   createStore, applyMiddleware, combineReducers,
+// } from 'redux'
+
+import { configureStore } from '@reduxjs/toolkit'
 
 import * as WebBrowser from 'expo-web-browser'
 
@@ -20,15 +22,26 @@ import RootStack from './navigation/RootStack'
 import ProvideAuth from './hooks/use-auth'
 import ProvideLanguage from './hooks/useLang'
 
-const rootReducer = combineReducers({
-  notification: notificationReducer,
-  cards: cardReducer,
-})
+import Notification from './components/Notification/Notification'
 
-const store = createStore(
-  rootReducer,
-  applyMiddleware(ReduxThunk),
-)
+// const rootReducer = combineReducers({
+//   notification: notificationReducer,
+//   cards: cardReducer,
+// })
+
+// const store = createStore(
+//   rootReducer,
+//   applyMiddleware(ReduxThunk),
+// )
+
+const rootReducer = {
+    notification: notificationReducer,
+    cards: cardReducer,
+  }
+
+const store = configureStore({
+  reducer: rootReducer,
+})
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -40,6 +53,7 @@ export default function App() {
         <ProvideLanguage>
           <PaperProvider>
             <RootStack />
+            <Notification />
           </PaperProvider>
         </ProvideLanguage>
       </ProvideAuth>

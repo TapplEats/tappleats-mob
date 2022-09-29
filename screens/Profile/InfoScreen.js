@@ -84,8 +84,8 @@ const InfoScreen = ({ cardData, onSetNotification, onLoadCardByUserId, onUpdateC
         setFormValid(adjustedInfoForm.formValid)
         // setNewVcardName(`${language.languageVars.appNameCAPS}_${data.urlSuffix}.vcf`)
         // setLoadingDone(true)
-        // setTimeout(() => setLoading(false), 1000)
-        setLoading(false)
+        setTimeout(() => setLoading(false), 1000)
+        // setLoading(false)
       })()
     }
 
@@ -121,8 +121,8 @@ const InfoScreen = ({ cardData, onSetNotification, onLoadCardByUserId, onUpdateC
       setFormSaved(true)
       setFormTouched(false)
 
-      // setTimeout(() => setLoading(false), 1000)
-      setLoading(false)
+      setTimeout(() => setLoading(false), 1000)
+      // setLoading(false)
       onSetNotification({
         message: pageStatics.messages.notifications.profileInfoUpdateSuccess,
         type: 'success',
@@ -177,19 +177,25 @@ const InfoScreen = ({ cardData, onSetNotification, onLoadCardByUserId, onUpdateC
 
   const buttonDisabled = formSaved || (formTouched && !formValid) || !formTouched || loading
 
-  if (loading) {
-    return <ActivityIndicator />
-  }
+  // if (loading) {
+  //   return <ActivityIndicator />
+  // }
 
   return (
     <View>
-      <Text>Info Screen</Text>
-      {loadTabFormContent(infoForm)}
-      <RNButton
-        disabled={buttonDisabled}
-        onPress={() => updateInfoHandler()}
-        title={pageStatics.buttons.updateInfo}
-      />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <View>
+          <Text>Info Screen</Text>
+          {loadTabFormContent(infoForm)}
+          <RNButton
+            disabled={buttonDisabled}
+            onPress={() => updateInfoHandler()}
+            title={pageStatics.buttons.updateInfo}
+          />
+        </View>
+      )}
     </View>
   )
 }
