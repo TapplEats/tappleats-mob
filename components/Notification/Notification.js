@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { View, StyleSheet } from 'react-native'
 import { Snackbar } from 'react-native-paper'
 
+import * as actions from '../../store/actions'
+
 const Notification = ({
   notification,
   isOpen,

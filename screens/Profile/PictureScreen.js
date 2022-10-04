@@ -29,6 +29,7 @@ const PictureScreen = ({
 
   const [loading, setLoading] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUploaded, setImageUploaded] = useState(false)
   const [imageSaved, setImageSaved] = useState(false)
   const [profileData, setProfileData] = useState(cardData || null)
   const [currentImage, setCurrentImage] = useState(null)
@@ -108,11 +109,16 @@ const PictureScreen = ({
           await getFirebaseStorage().ref().child(`/profiles/${cardData.image}`).delete()
           console.log('deleted')
         }
+
         snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED, () => {
+          console.log('start uploading image')
           setUploadingImage(true)
+          setImageUploaded(false)
         },
         error => {
           setUploadingImage(false)
+          setImageUploaded(false)
+          setLoading(false)
           console.log(error)
           blob.close()
           return
@@ -120,6 +126,14 @@ const PictureScreen = ({
         () => {
           snapshot.snapshot.ref.getDownloadURL().then(url => {
             setUploadingImage(false)
+            setImageUploaded(true)
+            // setTimeout(() => setLoading(false), 1000)
+            setLoading(false)
+            onSetNotification({
+              message: pageStatics.messages.notifications.profilePictureUpdateSuccess,
+              type: 'success',
+            })
+            console.log('uploading image ended')
             console.log(url)
             blob.close()
             return url
@@ -135,12 +149,14 @@ const PictureScreen = ({
       console.log('updated redux')
 
       setImageSaved(true)
-      setTimeout(() => setLoading(false), 1000)
+      // if (imageUploaded) {
+      //   setTimeout(() => setLoading(false), 1000)
+      // }
 
-      onSetNotification({
-        message: pageStatics.messages.notifications.profilePictureUpdateSuccess,
-        type: 'success',
-      })
+      // onSetNotification({
+      //   message: pageStatics.messages.notifications.profilePictureUpdateSuccess,
+      //   type: 'success',
+      // })
     } catch (err) {
       // setLoadingDone(true)
       setLoading(false)
